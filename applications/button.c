@@ -1,0 +1,140 @@
+/*
+ * Copyright (c) 2006-2021, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2021-12-8      Sam XIE      the first version
+ */
+#include <rtthread.h>
+#include <rtdevice.h>
+#include "board.h"
+#include <multi_button.h>
+#include "common.h"
+
+#define BUTTON_LED_PIN    rt_pin_get("PA.2")
+#define BUTTON_MOTOR_PIN  rt_pin_get("PF.0")
+
+static struct button button_led;
+static struct button button_motor;
+
+
+static uint8_t button_read_led_pin(void)
+{
+    return rt_pin_read(BUTTON_LED_PIN);
+}
+
+static uint8_t button_read_motor_pin(void)
+{
+    return rt_pin_read(BUTTON_MOTOR_PIN);
+}
+
+static void button_set_led_callback(void *btn)
+{
+    uint32_t btn_event_val;
+    rt_uint32_t set = 0;
+    btn_event_val = get_button_event((struct button *)btn);
+
+    switch(btn_event_val)
+    {
+        case PRESS_UP: // red
+            rt_kprintf("set led red!\r\n");
+            set = EVENT_LED_RED_FLAG;
+            break;
+
+        case SINGLE_CLICK: // green
+            rt_kprintf("set led green!\r\n");
+            set = EVENT_LED_GREEN_FLAG;
+            break;
+
+        case DOUBLE_CLICK: // blue
+            rt_kprintf("set led blue!\r\n");
+            set = EVENT_LED_BLUE_FLAG;
+            break;
+
+        case LONG_PRESS_START:  // close led
+            rt_kprintf("set led close!\r\n");
+            set = EVENT_LED_CLOSE_FLAG;
+            break;
+
+
+        default:
+            set = NO_EVENT_FLAG;
+            break;
+    }
+    if(set != NO_EVENT_FLAG)
+    {
+        //  need mutex_lock
+        rt_event_send(&control_event, set);
+    }
+}
+
+static void button_ctrl_motor_callback(void *btn)
+{
+    uint32_t btn_event_val;
+    rt_uint32_t set = 0;
+    btn_event_val = get_button_event((struct button *)btn);
+
+    switch(btn_event_val)
+    {
+        case PRESS_DOWN: // open
+            rt_kprintf("control motor open!\r\n");
+            set = EVENT_MOTOR_OPEN_FLAG;
+            break;
+
+        case PRESS_UP: // close
+            rt_kprintf("control motor close!\r\n");
+            set = EVENT_MOTOR_CLOSE_FLAG;
+            break;
+
+        default:
+            set = NO_EVENT_FLAG;
+            break;
+    }
+    if(set != NO_EVENT_FLAG){
+          //  need mutex_lock
+          rt_event_send(&control_event, set);
+     }
+}
+
+static void button_thread_entry(void* p)
+{
+    while(1)
+    {
+        /* 5ms */
+        rt_thread_delay(RT_TICK_PER_SECOND/200);
+        button_ticks();
+    }
+}
+
+static int ab32_button_init(void)
+{
+    rt_thread_t thread = RT_NULL;
+
+    /* Create background ticks thread */
+    thread = rt_thread_create("btn", button_thread_entry, RT_NULL, 512, 20, 10);
+    if(thread == RT_NULL)
+    {
+        return RT_ERROR;
+    }
+    rt_thread_startup(thread);
+
+    /* low level drive */
+    rt_pin_mode(BUTTON_LED_PIN, PIN_MODE_INPUT_PULLUP);
+    button_init(&button_led, button_read_led_pin, PIN_LOW);
+    button_attach(&button_led, PRESS_UP,         button_set_led_callback);
+    button_attach(&button_led, SINGLE_CLICK,     button_set_led_callback);
+    button_attach(&button_led, DOUBLE_CLICK,     button_set_led_callback);
+    button_attach(&button_led, LONG_PRESS_START, button_set_led_callback);
+    button_start(&button_led);
+
+    rt_pin_mode(BUTTON_MOTOR_PIN, PIN_MODE_INPUT_PULLUP);
+    button_init(&button_motor, button_read_motor_pin, PIN_LOW);
+    button_attach(&button_motor, PRESS_DOWN,   button_ctrl_motor_callback);
+    button_attach(&button_motor, PRESS_UP,     button_ctrl_motor_callback);
+    button_start(&button_motor);
+
+    return RT_EOK;
+}
+INIT_APP_EXPORT(ab32_button_init);
