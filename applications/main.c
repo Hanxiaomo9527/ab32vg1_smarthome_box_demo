@@ -1,0 +1,55 @@
+/*
+ * Copyright (c) 2020-2021, Bluetrum Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2021-12-8      Sam XIE      the first version
+ */
+
+/**
+ * Notice!
+ * All functions or data that are called during an interrupt need to be in RAM.
+ * You can do it the way exception_isr() does.
+ */
+
+#include <rtthread.h>
+#include <rtdevice.h>
+#include "board.h"
+#include "common.h"
+
+#define  LOG_TAG  "main"
+#include <ulog.h>
+#include "drv_gpio.h"
+
+
+int main(void)
+{
+#if 1
+    rt_kprintf("Welcome to use smarthome box\n");
+    ab32_led_init();
+    ab32_oled_init();
+    ab32_motor_init();
+    ab32_button_init();
+    ab32_uart_init(0, RT_NULL);
+    ab32_event_manager_init();
+    // ab32_dht11_init();
+    // ad32_infrared_sensor_init();
+#endif
+#if 0
+    uint8_t pin = rt_pin_get("PE.1");
+    rt_pin_mode(pin, PIN_MODE_OUTPUT);
+
+    rt_kprintf("Hello, world\n");
+    ab32_uart_init(0, RT_NULL);
+
+    while (1)
+    {
+        rt_pin_write(pin, PIN_LOW);
+        rt_thread_mdelay(500);
+        rt_pin_write(pin, PIN_HIGH);
+        rt_thread_mdelay(500);
+    }
+#endif
+}
