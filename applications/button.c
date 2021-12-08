@@ -108,17 +108,30 @@ static void button_thread_entry(void* p)
     }
 }
 
+<<<<<<< HEAD
 int ab32_button_init(void)
 {
     rt_thread_t button_thread = RT_NULL;
     rt_kprintf("button init!!\r\n");
     /* Create background ticks thread */
     button_thread = rt_thread_create("btn", button_thread_entry, RT_NULL, 512, 20, 10);
+=======
+static int ab32_button_init(void)
+{
+    rt_thread_t thread = RT_NULL;
+
+    /* Create background ticks thread */
+    thread = rt_thread_create("btn", button_thread_entry, RT_NULL, 512, 20, 10);
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
     if(thread == RT_NULL)
     {
         return RT_ERROR;
     }
+<<<<<<< HEAD
     rt_thread_startup(button_thread);
+=======
+    rt_thread_startup(thread);
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 
     /* low level drive */
     rt_pin_mode(BUTTON_LED_PIN, PIN_MODE_INPUT_PULLUP);
@@ -137,4 +150,8 @@ int ab32_button_init(void)
 
     return RT_EOK;
 }
+<<<<<<< HEAD
 // INIT_APP_EXPORT(ab32_button_init);
+=======
+INIT_APP_EXPORT(ab32_button_init);
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4

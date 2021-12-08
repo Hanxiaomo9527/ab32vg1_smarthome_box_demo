@@ -230,6 +230,7 @@
 
 /* u8g2: a monochrome graphic library */
 
+<<<<<<< HEAD
 #define PKG_USING_U8G2_OFFICIAL
 
 /* U8G2 Examples */
@@ -237,6 +238,8 @@
 /* end of U8G2 Examples */
 #define PKG_USING_U8G2_OFFICIAL_LATEST_VERSION
 #define PKG_U8G2_OFFICIAL_VER_NUM 0x99999
+=======
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 /* end of u8g2: a monochrome graphic library */
 
 /* PainterEngine: A cross-platform graphics application framework written in C language */
@@ -250,10 +253,13 @@
 
 /* system packages */
 
+<<<<<<< HEAD
 /* rt_kprintf: enhanced rt_kprintf packages */
 
 /* end of rt_kprintf: enhanced rt_kprintf packages */
 
+=======
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 /* acceleration: Assembly language or algorithmic acceleration packages */
 
 /* end of acceleration: Assembly language or algorithmic acceleration packages */

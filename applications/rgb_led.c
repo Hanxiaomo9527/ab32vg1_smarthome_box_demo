@@ -115,10 +115,16 @@ static void led_thread_entry(void *parameter)
 }
 #endif
 
+<<<<<<< HEAD
 int ab32_led_init(void)
 {
     int ret = RT_ERROR;
     rt_kprintf("led init!!\r\n");
+=======
+static int ab32_led_init(void)
+{
+    int ret = RT_ERROR;
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 
     led.red_pin   = LED_RED_PIN;
     led.green_pin = LED_GREEN_PIN;

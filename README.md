@@ -44,7 +44,13 @@ void example_isr(void)
 
 ab32vg1-prougen 是 中科蓝讯(Bluetrum) 推出的一款基于 RISC-V 内核的开发板，最高主频为 120Mhz，该开发板芯片为 AB32VG1。
 
+<<<<<<< HEAD
 
+=======
+开发板外观如下图所示：
+
+![board](figures/board.png)
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 
 该开发板常用 **板载资源** 如下：
 
@@ -130,3 +136,9 @@ msh >
 
 4. 输入`scons` 命令重新编译工程。
 
+<<<<<<< HEAD
+=======
+## 维护人信息
+
+- [greedyhao](https://github.com/greedyhao)
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4

@@ -159,8 +159,11 @@ static rt_err_t uart_receive(rt_device_t dev, rt_size_t size)
  */
 int ab32_uart_init(int argc, char *argv[])
 {
+<<<<<<< HEAD
     rt_kprintf("uart init!!\r\n");
 
+=======
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
     rt_err_t ret = RT_EOK;
     char uart_name[RT_NAME_MAX];
 

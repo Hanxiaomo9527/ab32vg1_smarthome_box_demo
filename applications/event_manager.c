@@ -85,7 +85,10 @@ int ab32_event_manager_init(void)
     event_manager_thread = rt_thread_create("event_manager_thread", event_manager_thread_entry, RT_NULL, 1024*2, 26, 10);
     if (event_manager_thread != RT_NULL){
         rt_thread_startup(event_manager_thread);
+<<<<<<< HEAD
         rt_kprintf("creat event manager success!\r\n");
+=======
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
     }else{
         rt_kprintf("creat event manager failed!\r\n");
     }

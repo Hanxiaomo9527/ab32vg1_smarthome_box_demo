@@ -13,7 +13,11 @@
 #include "oled_iic.h"
 #include "stdlib.h"
 #include "oledfont.h"
+<<<<<<< HEAD
 
+=======
+//#include "delay.h"
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 //OLED的显存
 //存放格式如下.
 //[0]0 1 2 3 ... 127
@@ -354,7 +358,10 @@ void oled_drawbmp(unsigned char x0, unsigned char y0,unsigned char x1, unsigned 
 //初始化SSD1306
 void ab32_oled_init(void)
 {
+<<<<<<< HEAD
     rt_kprintf("oled init!!\r\n");
+=======
+>>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
     rt_pin_mode(SDA_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(SCL_PIN, PIN_MODE_OUTPUT);
     rt_pin_write(SDA_PIN, PIN_HIGH);
