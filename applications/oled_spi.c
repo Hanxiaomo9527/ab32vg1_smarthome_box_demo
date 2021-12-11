@@ -27,7 +27,9 @@
 #include <stdio.h>
 #include "ssd1306.h"
 #include "oled_spi.h"
+#include "common.h"
 
+rt_mq_t oled_messagequeue = RT_NULL; // oled 消息队列
 
 static uint8_t pin_scl;
 static uint8_t pin_sda;
@@ -139,103 +141,89 @@ static void oled_gpio_init(void)
 
 void ssd1306_TestAll(void)
 {
+    ssd1306_Fill(Black);
+    ssd1306_SetCursor(2, 0);
+    ssd1306_WriteString("RT-Thread", Font_11x18, White);
+    ssd1306_SetCursor(2, 18);
+    ssd1306_WriteString("AB32VG1", Font_11x18, White);
+    ssd1306_SetCursor(2, 18+18);
+    ssd1306_WriteString("Sam XIE", Font_11x18, White);
+    ssd1306_SetCursor(2, 18+18+18);
+    ssd1306_WriteString("hanxiaomo12138@gmail.com", Font_6x8, White);
+    ssd1306_UpdateScreen();
+}
+
+int temp_bak = 0;
+int humi_bak = 0;
+void ssd1306_mainview_update(int screencolor, int wordcolor, int tempvalue, int humivalue, const char *actionstatus)
+{
+    char message[20] = "";
+    if(humivalue && tempvalue){
+        humi_bak = humivalue;
+        temp_bak = tempvalue;
+    }
+    rt_sprintf(message, "TEMP:%d   HUMI:%d",temp_bak, humi_bak);
+
+//    rt_kprintf("!!temp:%d, humi:%d, action_status:%s\r\n",tempvalue, humivalue, actionstatus);
+
+    ssd1306_Fill(screencolor);
+    ssd1306_SetCursor(2, 0);
+    ssd1306_WriteString("RT-Thread", Font_11x18, wordcolor);
+    ssd1306_SetCursor(2, 18);
+    ssd1306_WriteString("AB32VG1", Font_7x10, wordcolor);
+    ssd1306_SetCursor(2, 18+10);
+    ssd1306_WriteString(actionstatus, Font_6x8, wordcolor);
+    ssd1306_SetCursor(2, 18+10+8);
+    ssd1306_WriteString("TIME:21/12/12 00:59", Font_6x8, wordcolor);
+    ssd1306_SetCursor(2, 18+10+8+8);
+    ssd1306_WriteString(message, Font_6x8, wordcolor);
+    ssd1306_SetCursor(2, 18+10+8+8+8);
+    ssd1306_WriteString("Sam XIE 17503114086", Font_6x8, wordcolor);
+    ssd1306_UpdateScreen();
+}
+
+
+static void oled_update_screen_thread()
+{
+    oled_msg_data_t recvmsgbuffer;
+    char buf[128];
+    oled_messagequeue = rt_mq_create("oled_messagequeue", 128, 10, RT_IPC_FLAG_FIFO);
+    if(oled_messagequeue != RT_NULL){
+        rt_kprintf("create oled_msgqueue successful\r\n");
+    }else{
+        rt_kprintf("create oled_msgqueue failed\r\n");
+        return;
+    }
+
+    while(1){
+       if(rt_mq_recv(oled_messagequeue, (void*)&recvmsgbuffer, sizeof(oled_msg_data_t), RT_WAITING_FOREVER) != RT_EOK){
+            rt_kprintf("recv msg failed\r\n");
+        }else{
+            rt_kprintf("recv msg humi:%d\r",recvmsgbuffer.oled_view_data.humi_value);
+            rt_kprintf("recv msg temp:%d\r",recvmsgbuffer.oled_view_data.temp_value);
+            rt_kprintf("msg action_status:%s\r",recvmsgbuffer.oled_view_data.action_status);
+            ssd1306_mainview_update(White, Black, recvmsgbuffer.oled_view_data.temp_value, recvmsgbuffer.oled_view_data.humi_value, recvmsgbuffer.oled_view_data.action_status);
+        }
+
+    }
+
+}
+
+int ab32_oled_init(void)
+{
+    static rt_thread_t oled_thread = RT_NULL;
+
+    rt_kprintf("oled init!!\r");
+
     oled_gpio_init();
     ssd1306_Init();
-#if 0
-    ssd1306_Fill(Black);
-    ssd1306_SetCursor(2, 0);
-    ssd1306_WriteString("RT-Thread", Font_11x18, White);
-    ssd1306_SetCursor(2, 18);
-    ssd1306_WriteString("AB32VG1", Font_11x18, White);
-    ssd1306_SetCursor(2, 18+18);
-    ssd1306_WriteString("USB POWER", Font_11x18, White);
-    ssd1306_SetCursor(2, 18+18+18);
-    ssd1306_WriteString("chenbin182 - 3240408", Font_6x8, White);
-    ssd1306_UpdateScreen();
-#endif
-    ssd1306_Fill(Black);
-    ssd1306_SetCursor(2, 0);
-    ssd1306_WriteString("RT-Thread", Font_11x18, White);
-    ssd1306_SetCursor(2, 18);
-    ssd1306_WriteString("AB32VG1", Font_11x18, White);
-    ssd1306_SetCursor(2, 18+18);
-    ssd1306_WriteString("Sam XIE", Font_11x18, White);
-    ssd1306_SetCursor(2, 18+18+18);
-    ssd1306_WriteString("hanxiaomo12138@gmail.com", Font_6x8, White);
-    ssd1306_UpdateScreen();
-}
+    ssd1306_TestAll();
+    oled_thread = rt_thread_create("oled", oled_update_screen_thread, RT_NULL, 1024, 25, 5);
+    if (oled_thread != RT_NULL) {
+        rt_thread_startup(oled_thread);
+    } else {
+        rt_kprintf("create oled thread failed\r\n");
+    }
 
-void ssd1306_TestAll(void)
-{
-    ssd1306_Fill(Black);
-    ssd1306_SetCursor(2, 0);
-    ssd1306_WriteString("RT-Thread", Font_11x18, White);
-    ssd1306_SetCursor(2, 18);
-    ssd1306_WriteString("AB32VG1", Font_11x18, White);
-    ssd1306_SetCursor(2, 18+18);
-    ssd1306_WriteString("Sam XIE", Font_11x18, White);
-    ssd1306_SetCursor(2, 18+18+18);
-    ssd1306_WriteString("hanxiaomo12138@gmail.com", Font_6x8, White);
-    ssd1306_UpdateScreen();
-}
-
-uint8_t power_buff[2] = {0};
-uint16_t adc_buff[5] = {0};
-char str_buff[16] = {0};
-static uint32_t value;
-
-void ssd1306_refresh(void)
-{
-    ssd1306_Fill(Black);
-
-//    vio_read_hold_coils(0,3,power_buff);  //
-//    vio_read_input_regs(0,5,adc_buff);  //
-
-
-    ssd1306_SetCursor(2, 0);
-    value = adc_buff[0];
-    rt_snprintf(str_buff, 16, "IN   %d.%03d V ",value / 1000, value % 1000);
-    ssd1306_WriteString(str_buff, Font_7x10, White);
-
-
-    ssd1306_SetCursor(2, 12);
-//    if(dio_get_val(power_buff,0) > 0)
-//    {
-//        ssd1306_WriteString("USB1", Font_7x10, Black);
-//    }else {
-//        ssd1306_WriteString("USB1", Font_7x10, White);
-//    }
-    value = adc_buff[1];
-    rt_snprintf(str_buff, 16, " %d.%03d A ",value / 1000, value % 1000);
-    ssd1306_WriteString(str_buff, Font_7x10, White);
-
-
-    ssd1306_SetCursor(2, 12+12);
-//    if(dio_get_val(power_buff,1) > 0)
-//    {
-//        ssd1306_WriteString("USB2", Font_7x10, Black);
-//    }else {
-//        ssd1306_WriteString("USB2", Font_7x10, White);
-//    }
-    value = adc_buff[2];
-    rt_snprintf(str_buff, 16, " %d.%03d A ",value / 1000, value % 1000);
-    ssd1306_WriteString(str_buff, Font_7x10, White);
-
-
-    ssd1306_SetCursor(2, 12+12+12);
-//    if(dio_get_val(power_buff,2) > 0)
-//    {
-//        ssd1306_WriteString("USB3", Font_7x10, Black);
-//    }else {
-//        ssd1306_WriteString("USB3", Font_7x10, White);
-//    }
-    value = adc_buff[3];
-    rt_snprintf(str_buff, 16, " %d.%03d A ",value / 1000, value % 1000);
-    ssd1306_WriteString(str_buff, Font_7x10, White);
-
-
-    ssd1306_SetCursor(2, 12+12+12+12);
-    ssd1306_WriteString("chenbin182 - 3240408", Font_6x8, White);
-    ssd1306_UpdateScreen();
 }
 

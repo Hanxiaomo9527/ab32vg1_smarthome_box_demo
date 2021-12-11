@@ -30,12 +30,14 @@ int main(void)
     rt_kprintf("\r\n==================================\r");
     rt_kprintf("|* Welcome to use smarthome box *|\r");
     rt_kprintf("==================================\r\n");
+    ab32_oled_init();
+    rt_thread_delay(500);
     ab32_rgb_led_close();
     ab32_dht11_init();
 //    ab32_oled_init();
 //    oled_clear();
 //    load_menu();
-    ssd1306_TestAll();
+
     ab32_motor_init();
     ab32_button_init();
     ab32_uart_init(0, RT_NULL);

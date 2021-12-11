@@ -23,6 +23,18 @@
 #define EVENT_LED_CLOSE_FLAG      (1 << 5)
 
 extern struct rt_event control_event; //功能控制事件
+extern rt_mq_t oled_messagequeue; // oled 消息队列
+
+typedef struct _oled_data_t{
+    int temp_value;
+    int humi_value;
+    char action_status[64];
+}oled_data_t;
+
+typedef struct _oled_msg_data_t{
+    oled_data_t oled_view_data;
+ //   rt_uint32_t data_size;
+}oled_msg_data_t;
 
 void set_motor_value(rt_uint32_t pwm_value);
 
@@ -32,7 +44,10 @@ void ab32_rgb_led_close(void);
 
 //void load_menu(void);
 void ssd1306_TestAll(void);
+void ssd1306_TestAll_1(void);
+void ssd1306_TestAll_2(void);
 //void ab32_spi_init(void);
+int ab32_oled_init(void);
 
 int ab32_motor_init(void);
 

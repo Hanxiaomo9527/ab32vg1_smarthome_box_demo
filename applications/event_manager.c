@@ -26,8 +26,6 @@ static void control_event_init(void)
     rt_event_init(&control_event, "control_event", RT_IPC_FLAG_FIFO);
 }
 
-//INIT_APP_EXPORT(control_event_init);
-
 
 /* 事件处理线程 */
 static void event_manager_thread_entry(void *parameter)
@@ -54,25 +52,25 @@ static void event_manager_thread_entry(void *parameter)
 
             if(rt_event_recv(&control_event,EVENT_LED_RED_FLAG, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL) == RT_EOK)
             {
-                rgb_led_open(100, 0, 0);
+                rgb_led_open(60, 0, 0);
                 // oled show
             }
 
             if (rt_event_recv(&control_event, EVENT_LED_GREEN_FLAG, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL) == RT_EOK)
             {
-                rgb_led_open(0, 100, 0);
+                rgb_led_open(0, 60, 0);
                 // oled show
             }
 
             if (rt_event_recv(&control_event, EVENT_LED_BLUE_FLAG, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL) == RT_EOK)
             {
-                rgb_led_open(0, 0, 100);
+                rgb_led_open(0, 0, 60);
                 // oled show
             }
 
             if (rt_event_recv(&control_event, EVENT_LED_CLOSE_FLAG, RT_EVENT_FLAG_AND | RT_EVENT_FLAG_CLEAR, RT_WAITING_NO, RT_NULL) == RT_EOK)
             {
-                rgb_led_open(100, 100, 100);
+                rgb_led_open(60, 60, 60);
                 rt_thread_delay(2000);
                 ab32_rgb_led_close();
                 // oled show

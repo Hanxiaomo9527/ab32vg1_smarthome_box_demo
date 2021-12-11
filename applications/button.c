@@ -20,6 +20,8 @@ static struct button button_led;
 static struct button button_motor;
 
 
+oled_msg_data_t oled_btn_data_msg;
+
 static uint8_t button_read_led_pin(void)
 {
     return rt_pin_read(BUTTON_LED_PIN);
@@ -40,21 +42,25 @@ static void button_set_led_callback(void *btn)
     {
         case SINGLE_CLICK: // red
             rt_kprintf("set led red!\r\n");
+            strcpy(&oled_btn_data_msg.oled_view_data.action_status,"set rgb_led: red!!");
             set = EVENT_LED_RED_FLAG;
             break;
 
         case DOUBLE_CLICK: // green
             rt_kprintf("set led green!\r\n");
+            strcpy(&oled_btn_data_msg.oled_view_data.action_status,"set rgb_led: green!!");
             set = EVENT_LED_GREEN_FLAG;
             break;
 
         case LONG_PRESS_START: // blue
             rt_kprintf("set led blue!\r\n");
+            strcpy(&oled_btn_data_msg.oled_view_data.action_status,"set rgb_led: blue!!");
             set = EVENT_LED_BLUE_FLAG;
             break;
 
         case LONG_PRESS_HOLD:  // close led
             rt_kprintf("set led close!\r\n");
+            strcpy(&oled_btn_data_msg.oled_view_data.action_status,"set rgb_led: close!!");
             set = EVENT_LED_CLOSE_FLAG;
             break;
 
@@ -67,6 +73,7 @@ static void button_set_led_callback(void *btn)
     {
         //  need mutex_lock
         rt_event_send(&control_event, set);
+        rt_mq_send(oled_messagequeue, (void*)&oled_btn_data_msg, sizeof(oled_msg_data_t));
     }
 }
 
@@ -80,11 +87,13 @@ static void button_ctrl_motor_callback(void *btn)
     {
         case PRESS_DOWN: // open
             rt_kprintf("control motor open!\r\n");
+            strcpy(&oled_btn_data_msg.oled_view_data.action_status,"control moto: open!!");
             set = EVENT_MOTOR_OPEN_FLAG;
             break;
 
         case PRESS_UP: // close
             rt_kprintf("control motor close!\r\n");
+            strcpy(&oled_btn_data_msg.oled_view_data.action_status,"control moto: close!!");
             set = EVENT_MOTOR_CLOSE_FLAG;
             break;
 
@@ -95,6 +104,7 @@ static void button_ctrl_motor_callback(void *btn)
     if(set != NO_EVENT_FLAG){
           //  need mutex_lock
           rt_event_send(&control_event, set);
+          rt_mq_send(oled_messagequeue, (void*)&oled_btn_data_msg, sizeof(oled_msg_data_t));
      }
 }
 
