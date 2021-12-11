@@ -81,27 +81,6 @@
 
 /* Device virtual file system */
 
-#define RT_USING_DFS
-#define DFS_USING_WORKDIR
-#define DFS_FILESYSTEMS_MAX 4
-#define DFS_FILESYSTEM_TYPES_MAX 4
-#define DFS_FD_MAX 16
-#define RT_USING_DFS_ELMFAT
-
-/* elm-chan's FatFs, Generic FAT Filesystem Module */
-
-#define RT_DFS_ELM_CODE_PAGE 437
-#define RT_DFS_ELM_WORD_ACCESS
-#define RT_DFS_ELM_USE_LFN_3
-#define RT_DFS_ELM_USE_LFN 3
-#define RT_DFS_ELM_LFN_UNICODE_0
-#define RT_DFS_ELM_LFN_UNICODE 0
-#define RT_DFS_ELM_MAX_LFN 255
-#define RT_DFS_ELM_DRIVES 2
-#define RT_DFS_ELM_MAX_SECTOR_SIZE 512
-#define RT_DFS_ELM_REENTRANT
-/* end of elm-chan's FatFs, Generic FAT Filesystem Module */
-#define RT_USING_DFS_DEVFS
 /* end of Device virtual file system */
 
 /* Device Drivers */
@@ -117,20 +96,9 @@
 #define RT_USING_I2C_BITOPS
 #define RT_USING_PIN
 #define RT_USING_ADC
-#define RT_USING_PWM
 #define RT_USING_RTC
-#define RT_USING_SOFT_RTC
-#define RT_USING_SDIO
-#define RT_SDIO_STACK_SIZE 512
-#define RT_SDIO_THREAD_PRIORITY 15
-#define RT_MMCSD_STACK_SIZE 1024
-#define RT_MMCSD_THREAD_PREORITY 22
-#define RT_MMCSD_MAX_PARTITION 16
+#define RT_USING_ALARM
 #define RT_USING_WDT
-#define RT_USING_AUDIO
-#define RT_AUDIO_REPLAY_MP_BLOCK_SIZE 4096
-#define RT_AUDIO_REPLAY_MP_BLOCK_COUNT 2
-#define RT_AUDIO_RECORD_PIPE_SIZE 2048
 #define RT_USING_SENSOR
 #define RT_USING_SENSOR_CMD
 
@@ -142,7 +110,6 @@
 /* POSIX layer and C standard library */
 
 #define RT_USING_LIBC
-#define RT_USING_POSIX
 #define RT_LIBC_DEFAULT_TIMEZONE 8
 /* end of POSIX layer and C standard library */
 
@@ -230,16 +197,6 @@
 
 /* u8g2: a monochrome graphic library */
 
-<<<<<<< HEAD
-#define PKG_USING_U8G2_OFFICIAL
-
-/* U8G2 Examples */
-
-/* end of U8G2 Examples */
-#define PKG_USING_U8G2_OFFICIAL_LATEST_VERSION
-#define PKG_U8G2_OFFICIAL_VER_NUM 0x99999
-=======
->>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 /* end of u8g2: a monochrome graphic library */
 
 /* PainterEngine: A cross-platform graphics application framework written in C language */
@@ -253,13 +210,6 @@
 
 /* system packages */
 
-<<<<<<< HEAD
-/* rt_kprintf: enhanced rt_kprintf packages */
-
-/* end of rt_kprintf: enhanced rt_kprintf packages */
-
-=======
->>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 /* acceleration: Assembly language or algorithmic acceleration packages */
 
 /* end of acceleration: Assembly language or algorithmic acceleration packages */
@@ -276,7 +226,12 @@
 /* peripheral libraries and drivers */
 
 #define PKG_USING_SENSORS_DRIVERS
-#define SDIO_MAX_FREQ 24000000
+#define PKG_USING_DHT11
+#define PKG_USING_DHT11_LATEST_VERSION
+#define PKG_USING_SSD1306
+#define PKG_USING_SSD1306_I2C_ADDRESS 0x3C
+#define PKG_USING_SSD1306_I2C_BUS_NAME "i2c1"
+#define PKG_USING_SSD1306_LATEST_VERSION
 #define PKG_USING_BLUETRUM_SDK
 #define PKG_USING_BLUETRUM_SDK_LATEST_VERSION
 /* end of peripheral libraries and drivers */
@@ -309,9 +264,6 @@
 
 /* Onboard Peripheral Drivers */
 
-#define BSP_USING_AUDIO
-#define BSP_USING_AUDIO_PLAY
-#define BSP_USING_SDCARD
 /* end of Onboard Peripheral Drivers */
 
 /* On-chip Peripheral Drivers */
@@ -321,21 +273,12 @@
 #define BSP_UART0_FIFO_SIZE 10
 #define BSP_USING_UART1
 #define BSP_UART1_FIFO_SIZE 10
-#define BSP_USING_SDIO
 #define BSP_USING_I2C1
 
 /* Notice: PE3 --> 16; PE2 --> 15 */
 
 #define BSP_I2C1_SCL_PIN 16
 #define BSP_I2C1_SDA_PIN 15
-#define BSP_USING_PWM
-#define BSP_USING_T5_PWM
-#define BSP_USING_T5_PWM0
-#define BSP_USING_LPWM0
-
-/* G1, G2 and G3 are mutually exclusive */
-
-#define BSP_USING_LPWM0_G1
 #define BSP_USING_WDT
 #define BSP_USING_TIM
 #define BSP_USING_TIM1

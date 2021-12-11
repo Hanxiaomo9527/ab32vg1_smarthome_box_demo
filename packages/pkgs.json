@@ -1,5 +1,15 @@
 [
  {
+  "path": "/packages/peripherals/sensors/dht11", 
+  "ver": "latest", 
+  "name": "DHT11"
+ }, 
+ {
+  "path": "/packages/peripherals/ssd1306", 
+  "ver": "latest", 
+  "name": "SSD1306"
+ }, 
+ {
   "path": "/packages/peripherals/bluetrum_sdk", 
   "ver": "latest", 
   "name": "BLUETRUM_SDK"

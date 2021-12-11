@@ -1,5 +1,4 @@
 *.dblite
-*.bin
 *.dcf
 *.map
 *.lst
@@ -10,3 +9,4 @@
 
 build
 dist
+/Debug/

@@ -12,6 +12,7 @@
 
 #include "rtthread.h"
 #include <rtdevice.h>
+
 //#include "stdlib.h"
 #define OLED_MODE 0
 #define SIZE 8
@@ -23,8 +24,8 @@
 #define X_WIDTH     128
 #define Y_WIDTH     64
 //---- OLED IIC 端口定义----------------
-#define SDA_PIN rt_pin_get("PA.1")
-#define SCL_PIN rt_pin_get("PA.0")
+#define SDA_PIN rt_pin_get("PE.2")
+#define SCL_PIN rt_pin_get("PE.3")
 
 #define oled_sclk_clr() rt_pin_write(SCL_PIN, PIN_LOW)
 #define oled_sclk_set() rt_pin_write(SCL_PIN, PIN_HIGH)

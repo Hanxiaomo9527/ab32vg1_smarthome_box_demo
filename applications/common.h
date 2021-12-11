@@ -10,7 +10,7 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
-#include "oled_iic.h"
+#include "oled_spi.h"
 #include <rthw.h>
 
 /* 按键事件 */
@@ -26,10 +26,22 @@ extern struct rt_event control_event; //功能控制事件
 
 void set_motor_value(rt_uint32_t pwm_value);
 
-void set_led_red(rt_bool_t on);
-void set_led_green(rt_bool_t on);
-void set_led_blue(rt_bool_t on);
-void led_write(rt_bool_t r, rt_bool_t g, rt_bool_t b);
+void rgb_led_open(uint8_t red, uint8_t green, uint8_t blue);
+
+void ab32_rgb_led_close(void);
+
+//void load_menu(void);
+void ssd1306_TestAll(void);
+//void ab32_spi_init(void);
+
+int ab32_motor_init(void);
+
+int ab32_button_init(void);
+
+int ab32_dht11_init(void);
+
+int ab32_event_manager_init(void);
+
 int ab32_uart_init(int argc, char *argv[]);   // 8266 通讯 cmd 网络状态监听
 
 #endif /* _COMMON_H_ */

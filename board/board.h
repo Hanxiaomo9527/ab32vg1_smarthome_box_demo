@@ -29,4 +29,7 @@
 #define AB32_RT_HW_US_DELAY
 #endif
 
+//#define RT_SPI_SOFT
+//#define BSP_USING_SOFT_SPI1
+
 #endif

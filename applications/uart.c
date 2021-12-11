@@ -159,11 +159,9 @@ static rt_err_t uart_receive(rt_device_t dev, rt_size_t size)
  */
 int ab32_uart_init(int argc, char *argv[])
 {
-<<<<<<< HEAD
-    rt_kprintf("uart init!!\r\n");
 
-=======
->>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
+    rt_kprintf("uart init!!\r");
+
     rt_err_t ret = RT_EOK;
     char uart_name[RT_NAME_MAX];
 
@@ -188,10 +186,9 @@ int ab32_uart_init(int argc, char *argv[])
     uart_thread = rt_thread_create("uart", serial_thread_entry, RT_NULL, 1024, 25, 10);
 
     if(uart_thread != RT_NULL){
-        rt_kprintf("creat uart thread successful\n");
         rt_thread_startup(uart_thread);
     }else{
-        rt_kprintf("creat uart thread failed\n");
+        rt_kprintf("creat uart thread failed!!\r\n");
         ret = RT_ERROR;
     }
 

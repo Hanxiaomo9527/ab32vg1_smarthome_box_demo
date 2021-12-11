@@ -13,8 +13,8 @@
 #include <multi_button.h>
 #include "common.h"
 
-#define BUTTON_LED_PIN    rt_pin_get("PA.2")
-#define BUTTON_MOTOR_PIN  rt_pin_get("PF.0")
+#define BUTTON_LED_PIN    rt_pin_get("PA.5")
+#define BUTTON_MOTOR_PIN  rt_pin_get("PE.1")
 
 static struct button button_led;
 static struct button button_motor;
@@ -38,22 +38,22 @@ static void button_set_led_callback(void *btn)
 
     switch(btn_event_val)
     {
-        case PRESS_UP: // red
+        case SINGLE_CLICK: // red
             rt_kprintf("set led red!\r\n");
             set = EVENT_LED_RED_FLAG;
             break;
 
-        case SINGLE_CLICK: // green
+        case DOUBLE_CLICK: // green
             rt_kprintf("set led green!\r\n");
             set = EVENT_LED_GREEN_FLAG;
             break;
 
-        case DOUBLE_CLICK: // blue
+        case LONG_PRESS_START: // blue
             rt_kprintf("set led blue!\r\n");
             set = EVENT_LED_BLUE_FLAG;
             break;
 
-        case LONG_PRESS_START:  // close led
+        case LONG_PRESS_HOLD:  // close led
             rt_kprintf("set led close!\r\n");
             set = EVENT_LED_CLOSE_FLAG;
             break;
@@ -108,38 +108,27 @@ static void button_thread_entry(void* p)
     }
 }
 
-<<<<<<< HEAD
+
 int ab32_button_init(void)
 {
     rt_thread_t button_thread = RT_NULL;
-    rt_kprintf("button init!!\r\n");
+    rt_kprintf("button init!!\r");
     /* Create background ticks thread */
-    button_thread = rt_thread_create("btn", button_thread_entry, RT_NULL, 512, 20, 10);
-=======
-static int ab32_button_init(void)
-{
-    rt_thread_t thread = RT_NULL;
-
-    /* Create background ticks thread */
-    thread = rt_thread_create("btn", button_thread_entry, RT_NULL, 512, 20, 10);
->>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
-    if(thread == RT_NULL)
-    {
+    button_thread = rt_thread_create("button", button_thread_entry, RT_NULL, 512, 20, 10);
+    if(button_thread != RT_NULL){
+        rt_thread_startup(button_thread);
+    }else{
+        rt_kprintf("create button thread failed!\r\n");
         return RT_ERROR;
     }
-<<<<<<< HEAD
-    rt_thread_startup(button_thread);
-=======
-    rt_thread_startup(thread);
->>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
 
     /* low level drive */
     rt_pin_mode(BUTTON_LED_PIN, PIN_MODE_INPUT_PULLUP);
     button_init(&button_led, button_read_led_pin, PIN_LOW);
-    button_attach(&button_led, PRESS_UP,         button_set_led_callback);
     button_attach(&button_led, SINGLE_CLICK,     button_set_led_callback);
     button_attach(&button_led, DOUBLE_CLICK,     button_set_led_callback);
     button_attach(&button_led, LONG_PRESS_START, button_set_led_callback);
+    button_attach(&button_led, LONG_PRESS_HOLD,         button_set_led_callback);
     button_start(&button_led);
 
     rt_pin_mode(BUTTON_MOTOR_PIN, PIN_MODE_INPUT_PULLUP);
@@ -150,8 +139,6 @@ static int ab32_button_init(void)
 
     return RT_EOK;
 }
-<<<<<<< HEAD
+
 // INIT_APP_EXPORT(ab32_button_init);
-=======
-INIT_APP_EXPORT(ab32_button_init);
->>>>>>> cdbb41c1cd7e7d3fe4ab6f5f45403ec79b6c01c4
+
