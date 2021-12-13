@@ -7,17 +7,10 @@
  * Date           Author       Notes
  * 2021-12-8      Sam XIE      the first version
  *
+ * Thanks 大赛的提交者，SPI驱动oled的代码借鉴了对方的，oled的业务逻辑是我自己写的
+ * 
  */
 
-/*
- * Copyright (c) 2020, RudyLo <luhuadong@163.com>
- *
- * SPDX-License-Identifier: MIT License
- *
- * Change Logs:
- * Date           Author       Notes
- * 2020-11-15     luhuadong    the first version
- */
 
 #include <rtthread.h>
 #include <rtdevice.h>
@@ -26,7 +19,6 @@
 #include <string.h>
 #include <stdio.h>
 #include "ssd1306.h"
-#include "oled_spi.h"
 #include "common.h"
 
 rt_mq_t oled_messagequeue = RT_NULL; // oled 消息队列
@@ -52,12 +44,7 @@ static uint8_t pin_cs;
 #define OLED_CS_1           rt_pin_write(pin_cs,PIN_HIGH)
 #define OLED_CS_0           rt_pin_write(pin_cs,PIN_LOW)
 
-//
-//void oled_delay(void)
-//{
-//    uint32_t time = 10;
-//    while(time--);
-//}
+
 
 static void oled_write_byte(uint8_t dat)
 {
@@ -73,13 +60,11 @@ static void oled_write_byte(uint8_t dat)
         {
             OLED_SDIN_0;
         }
-        //oled_delay();
+
         OLED_CLK_1;
         dat<<=1;
-        //oled_delay();
     }
-    //OLED_CS_1;
-    //OLED_DC_1;
+
 }
 
 
@@ -121,25 +106,22 @@ static void oled_gpio_init(void)
 {
     pin_scl = rt_pin_get("PA.0");
     pin_sda = rt_pin_get("PA.1");
-  //  pin_res = rt_pin_get("PA.0");
     pin_dc = rt_pin_get("PA.2");
     pin_cs = rt_pin_get("PE.4");
 
     rt_pin_mode(pin_scl, PIN_MODE_OUTPUT);
     rt_pin_mode(pin_sda, PIN_MODE_OUTPUT);
-   // rt_pin_mode(pin_res, PIN_MODE_OUTPUT);
     rt_pin_mode(pin_dc, PIN_MODE_OUTPUT);
     rt_pin_mode(pin_cs, PIN_MODE_OUTPUT);
 
     rt_pin_write(pin_scl,PIN_HIGH);
     rt_pin_write(pin_sda,PIN_HIGH);
-   // rt_pin_write(pin_res,PIN_HIGH);
     rt_pin_write(pin_dc,PIN_HIGH);
     rt_pin_write(pin_cs,PIN_HIGH);
 }
 
 
-void ssd1306_TestAll(void)
+void ssd1306_show(void)
 {
     ssd1306_Fill(Black);
     ssd1306_SetCursor(2, 0);
@@ -174,7 +156,7 @@ void ssd1306_mainview_update(int screencolor, int wordcolor, int tempvalue, int 
     ssd1306_SetCursor(2, 18+10);
     ssd1306_WriteString(actionstatus, Font_6x8, wordcolor);
     ssd1306_SetCursor(2, 18+10+8);
-    ssd1306_WriteString("TIME:21/12/12 00:59", Font_6x8, wordcolor);
+    ssd1306_WriteString("TIME:xx/xx/xx xx:xx", Font_6x8, wordcolor);// 时间不够，其实可以接收串口（wifi to ab32vg1）的UTC时间，这里转换成年月日，时分
     ssd1306_SetCursor(2, 18+10+8+8);
     ssd1306_WriteString(message, Font_6x8, wordcolor);
     ssd1306_SetCursor(2, 18+10+8+8+8);
@@ -217,7 +199,7 @@ int ab32_oled_init(void)
 
     oled_gpio_init();
     ssd1306_Init();
-    ssd1306_TestAll();
+    ssd1306_show();
     oled_thread = rt_thread_create("oled", oled_update_screen_thread, RT_NULL, 1024, 25, 5);
     if (oled_thread != RT_NULL) {
         rt_thread_startup(oled_thread);

@@ -10,7 +10,6 @@
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
-#include "oled_spi.h"
 #include <rthw.h>
 
 /* 按键事件 */
@@ -36,16 +35,13 @@ typedef struct _oled_msg_data_t{
  //   rt_uint32_t data_size;
 }oled_msg_data_t;
 
+
 void set_motor_value(rt_uint32_t pwm_value);
 
 void rgb_led_open(uint8_t red, uint8_t green, uint8_t blue);
 
 void ab32_rgb_led_close(void);
 
-//void load_menu(void);
-void ssd1306_TestAll(void);
-void ssd1306_TestAll_1(void);
-void ssd1306_TestAll_2(void);
 //void ab32_spi_init(void);
 int ab32_oled_init(void);
 
