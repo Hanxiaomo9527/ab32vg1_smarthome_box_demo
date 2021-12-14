@@ -18,6 +18,7 @@
    - 串口（UART）         --  使用串口1  波特率：115200
 
 ## 软件设计
+![输入图片说明](doc/image/%E8%BD%AF%E4%BB%B6%E8%AE%BE%E8%AE%A1%E6%A1%86%E5%9B%BE.png)
 
          1.  软件初始化会创建线程"uart_thread"、"button_thread"、"event_manager_thread"、"dht11_thread"、"oled_thread"
 
